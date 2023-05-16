@@ -1,0 +1,1 @@
+# secim-tutanak-dogrulama
