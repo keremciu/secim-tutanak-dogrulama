@@ -3,7 +3,10 @@ import { Todo } from "./types";
 
 const todoPath = "/api/todos";
 
-export const useTodos = () => useSWR<Todo[]>(todoPath);
+const fetcher = (input: RequestInfo, init?: RequestInit) =>
+  fetch(input, init).then((res) => res.json());
+
+export const useTodos = () => useSWR<Todo[]>(todoPath, fetcher);
 
 export const createTodo = async (text: string) => {
   mutate(
