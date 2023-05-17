@@ -1,93 +1,133 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import { useMemo, useState } from "react";
-import { createTodo, deleteTodo, toggleTodo, useTodos } from "../api";
+import { useBallotData } from "../api";
 import styles from "../styles/Home.module.css";
-import { Todo } from "../types";
+import { useState } from "react";
 
-export const TodoList: React.FC = () => {
-  const { data: todos, error } = useTodos();
+const defaultSchoolNo = 55190;
 
-  if (error != null) return <div>Error loading todos...</div>;
-  if (todos == null) return <div>Loading...</div>;
+export const Details: React.FC = ({ schoolNo }: { schoolNo: number }) => {
+  const { data: ballotBoxes, error } = useBallotData(schoolNo);
 
-  if (todos.length === 0) {
-    return <div className={styles.emptyState}>Try adding a todo ☝️️</div>;
-  }
+  if (error != null) return <div>Error loading ballot images...</div>;
+  if (ballotBoxes == null) return <div>Loading...</div>;
+  if (!ballotBoxes.length) return <div>No data for this school.</div>;
+  const boxIds = ballotBoxes.map((box) => box.ballot_box_number);
 
   return (
-    <ul className={styles.todoList}>
-      {todos.map(todo => (
-        <TodoItem todo={todo} />
-      ))}
-    </ul>
+    <div>
+      <h3>{ballotBoxes[0].school_name} okulu</h3>
+      <BallotBoxSelector boxIds={boxIds}>
+        {(ballotBoxIndex: number) => {
+          const selectedBox = ballotBoxes[ballotBoxIndex];
+          return (
+            <div>
+              <h4>OyVeÖtesi verisi:</h4>
+              <ul>
+                <li>Erdogan: {selectedBox.cm_result?.votes[1]}</li>
+                <li>Ince: {selectedBox.cm_result?.votes[2]}</li>
+                <li>Kilicdaroglu: {selectedBox.cm_result?.votes[3]}</li>
+                <li>Ogan: {selectedBox.cm_result?.votes[4]}</li>
+              </ul>
+              <img
+                src={selectedBox.cm_result?.image_url}
+                alt="ballot image"
+                width={300}
+              />
+              <BallotResults
+                schoolName={selectedBox.school_name}
+                ballotBoxNo={selectedBox.ballot_box_number}
+              />
+            </div>
+          );
+        }}
+      </BallotBoxSelector>
+    </div>
   );
 };
 
-const TodoItem: React.FC<{ todo: Todo }> = ({ todo }) => (
-  <li className={styles.todo}>
-    <label
-      className={`${styles.label} ${todo.completed ? styles.checked : ""}`}
-    >
-      <input
-        type="checkbox"
-        checked={todo.completed}
-        className={`${styles.checkbox}`}
-        onChange={() => toggleTodo(todo)}
-      />
-      {todo.text}
-    </label>
+const BallotBoxSelector = ({ children, boxIds }) => {
+  const [ballotBox, setBallotBox] = useState<number>(0);
+  return (
+    <>
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+        }}
+        className={styles.addTodo}
+      >
+        <label htmlFor="schoolno">Sandık seç</label>
+        <select
+          name="ballotboxno"
+          value={ballotBox}
+          onChange={(e) => setBallotBox(Number(e.target.value))}
+        >
+          {boxIds.map((boxid: number, key: number) => (
+            <option key={key} value={key}>
+              {boxid} sandık
+            </option>
+          ))}
+        </select>
+      </form>
+      {children(ballotBox)}
+    </>
+  );
+};
 
-    <button className={styles.deleteButton} onClick={() => deleteTodo(todo.id)}>
-      ✕
-    </button>
-  </li>
-);
+export const BallotResults: React.FC = ({ schoolName, ballotBoxNo }: { schoolName: string, ballotBoxNo: number }) => {
+  return <h4>YSK verisi:</h4>;
+};
 
-const AddTodoInput = () => {
-  const [text, setText] = useState("");
-
+const SchoolSelector = ({ school, setSchool }) => {
   return (
     <form
-      onSubmit={async e => {
+      onSubmit={async (e) => {
         e.preventDefault();
-        createTodo(text);
-        setText("");
       }}
       className={styles.addTodo}
     >
+      <label htmlFor="schoolno">Okul numarasi</label>
       <input
+        id="schoolno"
+        name="schoolno"
         className={styles.input}
-        placeholder="Buy some milk"
-        value={text}
-        onChange={e => setText(e.target.value)}
+        placeholder="Enter a school no"
+        value={school}
+        onChange={(e) => setSchool(e.target.value)}
       />
-      <button className={styles.addButton}>Add</button>
     </form>
   );
 };
 
 const Home: NextPage = () => {
+  const [school, setSchool] = useState<number>(defaultSchoolNo);
   return (
     <div className={styles.container}>
       <Head>
-        <title>Railway NextJS Prisma</title>
+        <title>Seçim Tutanak Doğrulama - ALPHA</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <header className={styles.header}>
-        <h1 className={styles.title}>Todos</h1>
         <h2 className={styles.desc}>
-          NextJS app connected to Postgres using Prisma and hosted on{" "}
-          <a href="https://railway.app">Railway</a>
+          Bu uygulama şu an prototip aşamasındadır.
         </h2>
       </header>
 
       <main className={styles.main}>
-        <AddTodoInput />
-
-        <TodoList />
+        <SchoolSelector school={school} setSchool={setSchool} />
+        <Details schoolNo={school} />
       </main>
+      <footer>
+        <p>
+          <a href="https://github.com/orgs/acikkaynak/discussions/1">
+            <small>
+              Bu projeyle alakalı bilgiler için GitHubtaki tartışmayı
+              inceleyebilirsiniz.
+            </small>
+          </a>
+        </p>
+      </footer>
     </div>
   );
 };
