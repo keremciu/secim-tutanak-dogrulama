@@ -17,7 +17,7 @@ model Todo {
   completed Boolean
 }
 
-model Ballots {
+model Ballot {
   id        String   @id @default(uuid())
   il_adi           String
   ilce_adi         String
