@@ -16,3 +16,17 @@ model Todo {
   text      String
   completed Boolean
 }
+
+model Ballots {
+  id        String   @id @default(uuid())
+  il_adi           String
+  ilce_adi         String
+  muhtarlik_adi    String
+  sandik_alani_adi String
+  sandik_no        Int
+  secmen_sayisi    Int
+  aday1            Int
+  aday2            Int
+  aday3            Int
+  aday4            Int
+}

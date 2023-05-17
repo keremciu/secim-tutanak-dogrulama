@@ -20,7 +20,7 @@ export const Details: React.FC<IDetails> = ({ schoolNo }: IDetails) => {
 
   return (
     <div>
-      <h3>{ballotBoxes[0].school_name} okulu</h3>
+      <h3>{ballotBoxes[0].school_name}</h3>
       <BallotBoxSelector boxIds={boxIds}>
         {(ballotBoxIndex: number) => {
           const selectedBox = ballotBoxes[ballotBoxIndex];
@@ -87,6 +87,22 @@ export const BallotResults: React.FC<IBallotResults> = ({ schoolName, ballotBoxN
 };
 
 const SchoolSelector = ({ school, setSchool }) => {
+  const handleChange = (event) => {
+    const enteredValue = event.target.value;
+
+    // Maximum number allowed
+    const maxNumber = 55194;
+
+    // Remove any non-digit characters
+    const numericValue = enteredValue.replace(/\D/g, '');
+
+    // Check if the entered number exceeds the maximum
+    if (+numericValue > maxNumber || numericValue === '0') {
+      setSchool(numericValue === '0' ? '1' : String(maxNumber));
+    } else {
+      setSchool(numericValue);
+    }
+  };
   return (
     <form
       onSubmit={async (e) => {
@@ -94,14 +110,15 @@ const SchoolSelector = ({ school, setSchool }) => {
       }}
       className={styles.addTodo}
     >
-      <label htmlFor="schoolno">Okul numarasi</label>
+      <label htmlFor="schoolno">Okul numarasi (0-55194)</label>
       <input
+        type="text"
         id="schoolno"
         name="schoolno"
         className={styles.input}
         placeholder="Enter a school no"
         value={school}
-        onChange={(e) => setSchool(e.target.value)}
+        onChange={handleChange}
       />
     </form>
   );
