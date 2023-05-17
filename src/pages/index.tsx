@@ -6,7 +6,11 @@ import { useState } from "react";
 
 const defaultSchoolNo = 55190;
 
-export const Details: React.FC = ({ schoolNo }: { schoolNo: number }) => {
+interface IDetails {
+  schoolNo: number;
+}
+
+export const Details: React.FC<IDetails> = ({ schoolNo }: IDetails) => {
   const { data: ballotBoxes, error } = useBallotData(schoolNo);
 
   if (error != null) return <div>Error loading ballot images...</div>;
@@ -74,7 +78,11 @@ const BallotBoxSelector = ({ children, boxIds }) => {
   );
 };
 
-export const BallotResults: React.FC = ({ schoolName, ballotBoxNo }: { schoolName: string, ballotBoxNo: number }) => {
+interface IBallotResults {
+  schoolName: string, ballotBoxNo: number
+}
+
+export const BallotResults: React.FC<IBallotResults> = ({ schoolName, ballotBoxNo }: IBallotResults) => {
   return <h4>YSK verisi:</h4>;
 };
 
