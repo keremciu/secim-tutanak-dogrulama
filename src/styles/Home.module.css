@@ -7,7 +7,7 @@
 }
 
 .header {
-  padding: 4rem 0 2rem 0;
+  padding: 1rem 0 2rem 0;
 }
 
 .main {
@@ -50,7 +50,6 @@
   border-color: #cccccc;
   border-radius: 4px;
   flex-grow: 1;
-  margin-right: 0.5rem;
   font-size: 1em;
 }
 
@@ -98,29 +97,8 @@
   font-size: 1.1rem;
   padding: 0.5rem 0;
   cursor: pointer;
-}
-
-.checkbox {
-  margin-right: 1rem;
-}
-
-.checked {
-  text-decoration: line-through;
-}
-
-.deleteButton {
-  font-size: 1rem;
-  border: none;
-  background: none;
-  color: darkgrey;
-  cursor: pointer;
-}
-
-.deleteButton:hover {
-  color: var(--primary);
-}
-
-.emptyState {
+  align-items: center;
+  display: flex;
 }
 
 @media (max-width: 600px) {
@@ -128,4 +106,15 @@
     min-width: auto;
     width: 100%;
   }
+}
+
+.cards {
+  display: grid;
+  max-width: 1280px;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  grid-column-gap: 16px;
+}
+
+.card {
+  grid-column: span 1/span 1;
 }

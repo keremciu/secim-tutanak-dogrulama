@@ -13,3 +13,16 @@ export interface BallotBox {
   },
   school_name: string;
 }
+
+export interface BallotResult {
+  il_adi: string;
+  ilce_adi: string;
+  muhtarlik_adi: string;
+  sandik_no: number;
+  secmen_sayisi: number;
+  aday1: number;
+  aday2: number;
+  aday3: number;
+  aday4: number;
+}
+

@@ -17,12 +17,12 @@ model Todo {
   completed Boolean
 }
 
-model Ballot {
-  id        String   @id @default(uuid())
-  il_adi           String
-  ilce_adi         String
-  muhtarlik_adi    String
-  sandik_alani_adi String
+model ballot {
+  id               Int @id @default(autoincrement())
+  il_adi           String?
+  ilce_adi         String?
+  muhtarlik_adi    String?
+  sandik_alani_adi String?
   sandik_no        Int
   secmen_sayisi    Int
   aday1            Int

@@ -3,6 +3,7 @@ import Head from "next/head";
 import { useBallotData } from "../api";
 import styles from "../styles/Home.module.css";
 import { useState } from "react";
+import { BallotResults } from "../components/BallotResults";
 
 const defaultSchoolNo = 55190;
 
@@ -25,7 +26,8 @@ export const Details: React.FC<IDetails> = ({ schoolNo }: IDetails) => {
         {(ballotBoxIndex: number) => {
           const selectedBox = ballotBoxes[ballotBoxIndex];
           return (
-            <div>
+            <div className={styles.cards}>
+              <div className={styles.card}>
               <h4>OyVeÖtesi verisi:</h4>
               <ul>
                 <li>Erdogan: {selectedBox.cm_result?.votes[1]}</li>
@@ -38,10 +40,13 @@ export const Details: React.FC<IDetails> = ({ schoolNo }: IDetails) => {
                 alt="ballot image"
                 width={300}
               />
-              <BallotResults
-                schoolName={selectedBox.school_name}
-                ballotBoxNo={selectedBox.ballot_box_number}
-              />
+              </div>
+              <div className={styles.card}>
+                <BallotResults
+                  schoolName={selectedBox.school_name}
+                  ballotBoxNo={selectedBox.ballot_box_number}
+                />
+              </div>
             </div>
           );
         }}
@@ -60,8 +65,11 @@ const BallotBoxSelector = ({ children, boxIds }) => {
         }}
         className={styles.addTodo}
       >
-        <label htmlFor="schoolno">Sandık seç</label>
+        <label className={styles.label} htmlFor="schoolno">
+          Sandık seç
+        </label>
         <select
+          className={styles.input}
           name="ballotboxno"
           value={ballotBox}
           onChange={(e) => setBallotBox(Number(e.target.value))}
@@ -78,14 +86,6 @@ const BallotBoxSelector = ({ children, boxIds }) => {
   );
 };
 
-interface IBallotResults {
-  schoolName: string, ballotBoxNo: number
-}
-
-export const BallotResults: React.FC<IBallotResults> = ({ schoolName, ballotBoxNo }: IBallotResults) => {
-  return <h4>YSK verisi:</h4>;
-};
-
 const SchoolSelector = ({ school, setSchool }) => {
   const handleChange = (event) => {
     const enteredValue = event.target.value;
@@ -94,11 +94,11 @@ const SchoolSelector = ({ school, setSchool }) => {
     const maxNumber = 55194;
 
     // Remove any non-digit characters
-    const numericValue = enteredValue.replace(/\D/g, '');
+    const numericValue = enteredValue.replace(/\D/g, "");
 
     // Check if the entered number exceeds the maximum
-    if (+numericValue > maxNumber || numericValue === '0') {
-      setSchool(numericValue === '0' ? '1' : String(maxNumber));
+    if (+numericValue > maxNumber || numericValue === "0") {
+      setSchool(numericValue === "0" ? "1" : String(maxNumber));
     } else {
       setSchool(numericValue);
     }
@@ -110,7 +110,9 @@ const SchoolSelector = ({ school, setSchool }) => {
       }}
       className={styles.addTodo}
     >
-      <label htmlFor="schoolno">Okul numarasi (0-55194)</label>
+      <label className={styles.label} htmlFor="schoolno">
+        Okul numarasi (0-55194)
+      </label>
       <input
         type="text"
         id="schoolno"
