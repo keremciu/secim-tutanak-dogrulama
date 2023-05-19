@@ -1,6 +1,5 @@
 import { useBallotResults } from "../api";
 import uniqueSchoolList from "./school_list.json";
-import { BallotResult } from "..types";
 
 interface BallotData {
   city_name: string;
@@ -9,10 +8,10 @@ interface BallotData {
   school_name: string;
 }
 
-const schoolList: BallotData[] = uniqueSchoolList;
+const schoolList: any = uniqueSchoolList;
 
 const findSchool = (schoolName: string) => {
-  const school = schoolList.find((s) => s.school_name === schoolName);
+  const school = schoolList.find((s: BallotData) => s.school_name === schoolName);
   return school;
 };
 
